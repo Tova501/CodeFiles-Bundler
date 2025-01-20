@@ -13,11 +13,11 @@ namespace cfb
         {
             _languagesExtentions = new Dictionary<string, Tuple<List<string>, List<string>>>()
             {
-                { "PYTHON", new Tuple<List<string>, List<string>>(new List<string> { ".py", ".ipynb" }, new List<string> { "__pycache__", "pyc", "pyo", ".env" }) },
-                { "CSHARP", new Tuple<List<string>, List<string>>(new List<string> { ".cs" }, new List<string> { "bin", "obj", "*.suo" }) },
-                { "JAVA", new Tuple<List<string>, List<string>>(new List<string> { ".java" }, new List<string> { "target", "*.class", ".idea" }) },
+                { "PYTHON", new Tuple<List<string>, List<string>>(new List<string> { ".py", ".ipynb" }, new List<string> { "__pycache__", "pyc", "pyo", "env" }) },
+                { "CSHARP", new Tuple<List<string>, List<string>>(new List<string> { ".cs" }, new List<string> { "bin", "obj", "suo" }) },
+                { "JAVA", new Tuple<List<string>, List<string>>(new List<string> { ".java" }, new List<string> { "target", "class", "idea" }) },
                 { "JAVASCRIPT", new Tuple<List<string>, List<string>>(new List<string> { ".js" }, new List<string> { "node_modules", "npm-debug.log", "dist" }) },
-                { "PHP", new Tuple<List<string>, List<string>>(new List<string> { ".php" }, new List<string> { "vendor", ".env", "composer.lock" }) },
+                { "PHP", new Tuple<List<string>, List<string>>(new List<string> { ".php" }, new List<string> { "vendor", "env", "composer.lock" }) },
                 { "RUBY", new Tuple<List<string>, List<string>>(new List<string> { ".rb" }, new List<string> { "log", "tmp" }) },
                 { "GO", new Tuple<List<string>, List<string>>(new List<string> { ".go" }, new List<string> { "bin", "vendor" }) },
                 { "SWIFT", new Tuple<List<string>, List<string>>(new List<string> { ".swift" }, new List<string> { "build", "xcodeproj" }) },
@@ -53,6 +53,15 @@ namespace cfb
         public List<String> GetLanguages()
         {
             return _languagesExtentions.Keys.ToList();
+        }
+
+        public List<String> GetIgnores(){
+            List<string> ignores = new List<string>();
+            foreach(var item in _languagesExtentions)
+            {
+                ignores.AddRange(item.Value.Item2);
+            }
+            return ignores;
         }
     }
 }

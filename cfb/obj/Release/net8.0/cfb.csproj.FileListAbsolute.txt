@@ -28,3 +28,4 @@ C:\Users\User\Desktop\CodeFileBundlerCLI\cfb\obj\Release\net8.0\refint\cfb.dll
 C:\Users\User\Desktop\CodeFileBundlerCLI\cfb\obj\Release\net8.0\cfb.pdb
 C:\Users\User\Desktop\CodeFileBundlerCLI\cfb\obj\Release\net8.0\cfb.genruntimeconfig.cache
 C:\Users\User\Desktop\CodeFileBundlerCLI\cfb\obj\Release\net8.0\ref\cfb.dll
+C:\Users\User\Desktop\CodeFileBundlerCLI\cfb\obj\Release\net8.0\cfb.sourcelink.json

@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.ComponentModel.Design;
 using System.Data;
 using System.IO;
 using System.Xml;
@@ -107,7 +108,7 @@ List<string> FilterFiles(string path, List<string> languages)
     var supportedLangs = langExtensions.GetLanguages();
     foreach (var lang in languages)
     {
-        if (!supportedLangs.Contains(lang.ToUpper()))
+        if (!supportedLangs.Contains(lang.ToUpper()) && !lang.ToUpper().Equals("ALL"))
         {
             throw new Exception($"ERROR: This language is not supported in the bundle command: {lang}");
         }
@@ -117,18 +118,23 @@ List<string> FilterFiles(string path, List<string> languages)
     var directories = Directory.GetDirectories(path);
     var files = Directory.GetFiles(path);
 
+    //Add the files in the directories to res if the directories are not in ignores
     foreach (var dir in directories)
     {
-        Console.WriteLine(path);
         if (!languages.Any(lang =>
         {
-            var (Extensions, ignores) = langDict[lang.ToUpper()];
+            List<string> ignores;
+            if (lang.ToUpper().Equals("ALL"))
+                ignores = langExtensions.GetIgnores();
+            else ignores = langDict[lang.ToUpper()].Item2;
             return ignores.Any(ignore => dir.EndsWith(ignore));
         }))
         {
             res.AddRange(FilterFiles(dir, languages));
         }
     }
+
+    //Add the files to res
     if (languages.Contains("ALL", StringComparer.OrdinalIgnoreCase))
     {
         res.AddRange(files);
@@ -138,7 +144,7 @@ List<string> FilterFiles(string path, List<string> languages)
     {
         if (languages.Any(lang =>
         {
-            var (extensions, ignores) = langDict[lang.ToUpper()];
+            var extensions = langDict[lang.ToUpper()].Item1;
             return extensions.Contains(Path.GetExtension(file));
         }))
             res.Add(file);
@@ -152,7 +158,6 @@ static void CreateBundledFile(List<string> sourceFiles, string output, bool note
     {
         sourceFiles = sourceFiles.OrderBy(f => Path.GetExtension(f)).ToList();
     }
-
     try
     {
         using (StreamWriter writer = new StreamWriter(output))
@@ -161,7 +166,6 @@ static void CreateBundledFile(List<string> sourceFiles, string output, bool note
             {
                 writer.WriteLine($"// Author: {author}");
             }
-
             foreach (var file in sourceFiles)
             {
                 if (note)
